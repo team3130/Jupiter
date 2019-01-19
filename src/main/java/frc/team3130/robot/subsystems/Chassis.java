@@ -1,6 +1,5 @@
 package frc.team3130.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -20,27 +19,26 @@ public class Chassis extends Subsystem{
 
     private static DifferentialDrive m_drive;
 
-    private static WPI_TalonSRX m_leftMotorFront;
-    private static WPI_TalonSRX m_leftMotorRear;
-    private static WPI_TalonSRX m_rightMotorFront;
-    private static WPI_TalonSRX m_rightMotorRear;
+    private static WPI_TalonSRX m_leftMotor;
+    private static WPI_TalonSRX m_rightMotor;
+
 
 
 
     private Chassis() {
         
 
-        m_leftMotorFront = new WPI_TalonSRX(RobotMap.CAN_LEFTMOTORFRONT);
-        m_leftMotorRear = new WPI_TalonSRX(RobotMap.CAN_LEFTMOTORREAR);
-    	m_rightMotorFront = new WPI_TalonSRX(RobotMap.CAN_RIGHTMOTORFRONT);
-        m_rightMotorRear = new WPI_TalonSRX(RobotMap.CAN_RIGHTMOTORREAR);
+        m_leftMotor = new WPI_TalonSRX(RobotMap.CAN_LEFTMOTOR);
+
+    	m_rightMotor = new WPI_TalonSRX(RobotMap.CAN_RIGHTMOTORFRONT);
+
         
-        m_leftMotorFront.setNeutralMode(NeutralMode.Brake);
-        m_rightMotorFront.setNeutralMode(NeutralMode.Brake);
-        m_leftMotorRear.set(ControlMode.Follower, RobotMap.CAN_LEFTMOTORFRONT);
-        m_rightMotorRear.set(ControlMode.Follower, RobotMap.CAN_RIGHTMOTORFRONT);
+        m_leftMotor.setNeutralMode(NeutralMode.Brake);
+        m_rightMotor.setNeutralMode(NeutralMode.Brake);
+
+
         
-        m_drive = new DifferentialDrive(m_leftMotorFront, m_rightMotorFront);
+        m_drive = new DifferentialDrive(m_leftMotorFront, m_rightMotor);
         m_drive.setSafetyEnabled(false);
 
     }
