@@ -26,11 +26,9 @@ public class Chassis extends Subsystem{
 
 
     private Chassis() {
-        
-
         m_leftMotor = new WPI_TalonSRX(RobotMap.CAN_LEFTMOTOR);
 
-    	m_rightMotor = new WPI_TalonSRX(RobotMap.CAN_RIGHTMOTORFRONT);
+    	m_rightMotor = new WPI_TalonSRX(RobotMap.CAN_RIGHTMOTOR);
 
         
         m_leftMotor.setNeutralMode(NeutralMode.Brake);
@@ -38,14 +36,14 @@ public class Chassis extends Subsystem{
 
 
         
-        m_drive = new DifferentialDrive(m_leftMotorFront, m_rightMotor);
+        m_drive = new DifferentialDrive(m_leftMotor, m_rightMotor);
         m_drive.setSafetyEnabled(false);
 
     }
 
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
-    	setDefaultCommand(new DefaultDrive());
+        setDefaultCommand(new DefaultDrive());
         //setDefaultCommand(new MySpecialCommand());
     }
 
