@@ -26,6 +26,10 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+
+    OI.GetInstance();
+
+    Chassis.GetInstance();
   }
 
   /**
@@ -77,6 +81,13 @@ public class Robot extends TimedRobot {
   /**
    * This function is called periodically during operator control.
    */
+
+  @Override
+  public void teleopInit() {
+
+  }
+
+
   @Override
   public void teleopPeriodic() {
   }
