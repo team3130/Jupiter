@@ -27,10 +27,11 @@ public class Chassis extends Subsystem{
 
     private Chassis() {
         m_leftMotor = new WPI_TalonSRX(RobotMap.CAN_LEFTMOTOR);
-
     	m_rightMotor = new WPI_TalonSRX(RobotMap.CAN_RIGHTMOTOR);
 
-        
+    	m_leftMotor.configFactoryDefault();
+    	m_rightMotor.configFactoryDefault();
+
         m_leftMotor.setNeutralMode(NeutralMode.Brake);
         m_rightMotor.setNeutralMode(NeutralMode.Brake);
 
