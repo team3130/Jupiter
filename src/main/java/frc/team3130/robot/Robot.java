@@ -1,5 +1,6 @@
 package frc.team3130.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -33,6 +34,7 @@ public class Robot extends TimedRobot {
     OI.GetInstance();
 
     Chassis.GetInstance();
+    CameraServer.getInstance().startAutomaticCapture();
   }
 
   /**
