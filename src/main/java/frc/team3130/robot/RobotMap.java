@@ -15,10 +15,18 @@ package frc.team3130.robot;
  */
 public class RobotMap {
 
+
+	/**
+	 * CAN IDs
+	 */
 	public static final int CAN_PNMMODULE = 1;
 
     public static final int CAN_LEFTMOTOR= 2;
 	public static final int CAN_RIGHTMOTOR = 3;
 
+//4-10 are CAN ports not IDed yet in Jupiter but are in Juno
+	
+	public static final int CAN_ELEVATOR1 = 11;
+	public static final int CAN_ELEVATOR2 = 12;
 	
 }
