@@ -268,8 +268,9 @@ public class MotionProfileExample {
             point.position = profile[i][0];
             point.velocity = profile[i][1];
             point.timeDur = (int) profile[i][2];
-            point.profileSlotSelect = 0; /* which set of gains would you like to use? */
-            point.velocityOnly = false; /* set true to not do any position
+            point.profileSlotSelect0 = 0; /* which set of gains would you like to use? */
+            /*point.velocityOnly = false;
+             * set true to not do any position
              * servo, just velocity feedforward
              */
             point.zeroPos = false;
@@ -298,7 +299,7 @@ public class MotionProfileExample {
      *         motion-profile output, 1 for enable motion-profile, 2 for hold
      *         current motion profile trajectory point.
      */
-    WPI_TalonSRX.SetValueMotionProfile getSetValue() {
+    SetValueMotionProfile getSetValue() {
         return _setValue;
     }
 }
