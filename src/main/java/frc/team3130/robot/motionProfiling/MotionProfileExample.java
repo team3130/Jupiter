@@ -24,6 +24,11 @@ package frc.team3130.robot.motionProfiling;
  */
 
 
+import com.ctre.phoenix.motion.MotionProfileStatus;
+import com.ctre.phoenix.motion.SetValueMotionProfile;
+import com.ctre.phoenix.motion.TrajectoryPoint;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Notifier;
 
 
@@ -34,7 +39,7 @@ public class MotionProfileExample {
      * Instead of creating a new one every time we call getMotionProfileStatus,
      * keep one copy.
      */
-    private WPI_TalonSRX.MotionProfileStatus _status = new WPI_TalonSRX.MotionProfileStatus();
+    private MotionProfileStatus _status = new MotionProfileStatus();
 
     /**
      * reference to the talon we plan on manipulating. We will not changeMode()
@@ -67,7 +72,7 @@ public class MotionProfileExample {
      * the set value to be and let the calling module apply it whenever we
      * decide to switch to MP mode.
      */
-    private WPI_TalonSRX.SetValueMotionProfile _setValue = WPI_TalonSRX.SetValueMotionProfile.Disable;
+    private SetValueMotionProfile _setValue = SetValueMotionProfile.Disable;
     /**
      * How many trajectory points do we wait for before firing the motion
      * profile.
@@ -122,7 +127,7 @@ public class MotionProfileExample {
          */
         _talon.clearMotionProfileTrajectories();
         /* When we do re-enter motionProfile control mode, stay disabled. */
-        _setValue = WPI_TalonSRX.SetValueMotionProfile.Disable;
+        _setValue = SetValueMotionProfile.Disable;
         /* When we do start running our state machine start at the beginning. */
         _state = 0;
         _loopTimeout = -1;
@@ -160,7 +165,7 @@ public class MotionProfileExample {
         }
 
         /* first check if we are in MP mode */
-        if (_talon.getControlMode() != TalonControlMode.MotionProfile) {
+        if (_talon.getControlMode() != ControlMode.MotionProfile) {
             /*
              * we are not in MP mode. We are probably driving the robot around
              * using gamepads or some other mode.
@@ -178,7 +183,7 @@ public class MotionProfileExample {
                     if (_bStart) {
                         _bStart = false;
 
-                        _setValue = WPI_TalonSRX.SetValueMotionProfile.Disable;
+                        _setValue = SetValueMotionProfile.Disable;
                         startFilling();
                         /*
                          * MP is being sent to CAN bus, wait a small amount of time
@@ -194,7 +199,7 @@ public class MotionProfileExample {
                     /* do we have a minimum numberof points in Talon */
                     if (_status.btmBufferCnt > kMinPointsInTalon) {
                         /* start (once) the motion profile */
-                        _setValue = WPI_TalonSRX.SetValueMotionProfile.Enable;
+                        _setValue = SetValueMotionProfile.Enable;
                         /* MP will start once the control frame gets scheduled */
                         _state = 2;
                         _loopTimeout = kNumLoopsTimeout;
@@ -214,12 +219,12 @@ public class MotionProfileExample {
                      * another. We will go into hold state so robot servo's
                      * position.
                      */
-                    if (_status.activePointValid && _status.activePoint.isLastPoint) {
+                    if (_status.activePointValid && _status.isLast) {
                         /*
                          * because we set the last point's isLast to true, we will
                          * get here when the MP is done
                          */
-                        _setValue = WPI_TalonSRX.SetValueMotionProfile.Hold;
+                        _setValue = SetValueMotionProfile.Hold;
                         _state = 0;
                         _loopTimeout = -1;
                     }
@@ -239,7 +244,7 @@ public class MotionProfileExample {
     private void startFilling(double[][] profile, int totalCnt) {
 
         /* create an empty point */
-        WPI_TalonSRX.TrajectoryPoint point = new WPI_TalonSRX.TrajectoryPoint();
+        TrajectoryPoint point = new TrajectoryPoint();
 
         /* did we get an underrun condition since last time we checked ? */
         if (_status.hasUnderrun) {
@@ -262,7 +267,7 @@ public class MotionProfileExample {
             /* for each point, fill our structure and pass it to API */
             point.position = profile[i][0];
             point.velocity = profile[i][1];
-            point.timeDurMs = (int) profile[i][2];
+            point.timeDur = (int) profile[i][2];
             point.profileSlotSelect = 0; /* which set of gains would you like to use? */
             point.velocityOnly = false; /* set true to not do any position
              * servo, just velocity feedforward
