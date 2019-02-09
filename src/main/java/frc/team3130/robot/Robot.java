@@ -35,6 +35,7 @@ public class Robot extends TimedRobot {
 
     Chassis.GetInstance();
     CameraServer.getInstance().startAutomaticCapture();
+    CameraServer.getInstance().addAxisCamera("10.31.30.12");
   }
 
   /**
