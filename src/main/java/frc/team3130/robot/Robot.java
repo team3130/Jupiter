@@ -1,11 +1,14 @@
 package frc.team3130.robot;
 
+import com.ctre.phoenix.motion.SetValueMotionProfile;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team3130.robot.OI;
+
+import frc.team3130.robot.motionProfiling.MotionProfileExample;
 import frc.team3130.robot.subsystems.Chassis;
 
 /**
@@ -20,6 +23,10 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+
+  /** some example logic on how one can manage an MP */
+  public static MotionProfileExample tantanMethod;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -36,6 +43,13 @@ public class Robot extends TimedRobot {
     Chassis.GetInstance();
     CameraServer.getInstance().startAutomaticCapture();
     CameraServer.getInstance().addAxisCamera("10.31.30.12");
+
+    tantanMethod = new MotionProfileExample(Chassis.getTalon());
+  }
+
+  @Override
+  public void disabledInit(){
+    tantanMethod.reset();
   }
 
   /**
@@ -97,11 +111,19 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
+
+    tantanMethod.control();
+
+    SetValueMotionProfile tantanMethodSetValue = tantanMethod.getSetValue();
+
+    Chassis.getTalon().set(ControlMode.MotionProfile, tantanMethodSetValue.value);
+
   }
 
-  /**
-   * This function is called periodically during test mode.
-   */
+
+    /**
+     * This function is called periodically during test mode.
+     */
   @Override
   public void testPeriodic() {
   }

@@ -1,5 +1,6 @@
 package frc.team3130.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -29,8 +30,9 @@ public class Chassis extends Subsystem{
         m_leftMotor = new WPI_TalonSRX(RobotMap.CAN_LEFTMOTOR);
     	m_rightMotor = new WPI_TalonSRX(RobotMap.CAN_RIGHTMOTOR);
 
-    	m_leftMotor.configFactoryDefault();
-    	m_rightMotor.configFactoryDefault();
+    	m_leftMotor.configFactoryDefault(FeedbackDevice.CTRE_MagEncoder_Relative.value);
+    	m_rightMotor.configFactoryDefault(FeedbackDevice.CTRE_MagEncoder_Relative.value);
+
 
         m_leftMotor.setNeutralMode(NeutralMode.Brake);
         m_rightMotor.setNeutralMode(NeutralMode.Brake);
@@ -50,6 +52,10 @@ public class Chassis extends Subsystem{
 
     public static void DriveArcade(double moveThrottle, double turnThrottle, boolean squaredinputs){
         m_drive.arcadeDrive(moveThrottle, turnThrottle, squaredinputs);
+    }
+
+    public static WPI_TalonSRX getTalon(){
+        return m_leftMotor;
     }
 
 

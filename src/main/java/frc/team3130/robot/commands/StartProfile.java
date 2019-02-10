@@ -9,31 +9,25 @@ package frc.team3130.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.team3130.robot.OI;
-import frc.team3130.robot.RobotMap;
+import frc.team3130.robot.Robot;
 import frc.team3130.robot.subsystems.Chassis;
 
-public class DefaultDrive extends Command {
-  public DefaultDrive() {
+public class StartProfile extends Command {
+  public StartProfile() {
     // Use requires() here to declare subsystem dependencies
-    requires(Chassis.GetInstance());
     // eg. requires(chassis);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    Robot.tantanMethod.startMotionProfile();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
 
-    double moveSpeed = -OI.gamepad.getRawAxis(1); //joystick's y axis is inverted
-    double turnSpeed = -OI.gamepad.getRawAxis(4);
-
-    
-    double turnThrottle = (0.5 * OI.stickR.getRawAxis(2)-0.5);
-    Chassis.DriveArcade(moveSpeed, turnThrottle * turnSpeed, true);
   }
 
   // Make this return true when this Command no longer needs to run execute()
