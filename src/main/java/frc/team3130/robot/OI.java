@@ -3,6 +3,7 @@ package frc.team3130.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
+import frc.team3130.robot.commands.StartProfile;
 
 public class OI {
     private class JoystickTrigger extends Trigger {
@@ -63,13 +64,17 @@ public class OI {
     public static Joystick stickR;
     public static Joystick gamepad;
 
-
+    public static JoystickButton startProfile;
 
 
     private OI(){
         stickL = new Joystick(0);
         stickR = new Joystick(1);
         gamepad = new Joystick(2);
+
+        startProfile = new JoystickButton(stickL, 1);
+
+        startProfile.whenPressed(new StartProfile());
     }
 
 
