@@ -15,6 +15,8 @@ package frc.team3130.robot;
  */
 public class RobotMap {
 
+	public static double kTalonTicksPerRotation = 4096;
+
 	public static final int CAN_PNMMODULE = 1;
 
     public static final int CAN_LEFTMOTOR= 2;

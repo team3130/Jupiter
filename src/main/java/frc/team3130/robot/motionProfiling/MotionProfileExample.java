@@ -2,7 +2,7 @@ package frc.team3130.robot.motionProfiling;
 /**
  * Example logic for firing and managing motion profiles.
  * This example sends MPs, waits for them to finish
- * Although this code uses a WPI_TalonSRX, nowhere in this module do we changeMode() or call set() to change the output.
+ * Although this code uses a CANTalon, nowhere in this module do we changeMode() or call set() to change the output.
  * This is done in Robot.java to demonstrate how to change control modes on the fly.
  *
  * The only routines we call on Talon are....
@@ -24,13 +24,12 @@ package frc.team3130.robot.motionProfiling;
  */
 
 
-import com.ctre.phoenix.motion.MotionProfileStatus;
-import com.ctre.phoenix.motion.SetValueMotionProfile;
-import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import edu.wpi.first.wpilibj.Notifier;
+import com.ctre.phoenix.motorcontrol.can.*;
 
+import edu.wpi.first.wpilibj.Notifier;
+import com.ctre.phoenix.motion.*;
+import frc.team3130.robot.RobotMap;
 
 public class MotionProfileExample {
 
@@ -41,12 +40,15 @@ public class MotionProfileExample {
      */
     private MotionProfileStatus _status = new MotionProfileStatus();
 
+    /** additional cache for holding the active trajectory point */
+    double _pos=0,_vel=0,_heading=0;
+
     /**
      * reference to the talon we plan on manipulating. We will not changeMode()
      * or call set(), just get motion profile status and make decisions based on
      * motion profile.
      */
-    private WPI_TalonSRX _talon;
+    private TalonSRX _talon;
     /**
      * State machine to make sure we let enough of the motion profile stream to
      * talon before we fire it.
@@ -68,7 +70,7 @@ public class MotionProfileExample {
     private boolean _bStart = false;
 
     /**
-     * Since the WPI_TalonSRX.set() routine is mode specific, deduce what we want
+     * Since the CANTalon.set() routine is mode specific, deduce what we want
      * the set value to be and let the calling module apply it whenever we
      * decide to switch to MP mode.
      */
@@ -105,7 +107,7 @@ public class MotionProfileExample {
      * @param talon
      *            reference to Talon object to fetch motion profile status from.
      */
-    public MotionProfileExample(WPI_TalonSRX talon) {
+    public MotionProfileExample(TalonSRX talon) {
         _talon = talon;
         /*
          * since our MP is 10ms per point, set the control frame rate and the
@@ -158,7 +160,7 @@ public class MotionProfileExample {
                  * something is wrong. Talon is not present, unplugged, breaker
                  * tripped
                  */
-                instrumentation.OnNoProgress();
+                Instrumentation.OnNoProgress();
             } else {
                 --_loopTimeout;
             }
@@ -230,9 +232,16 @@ public class MotionProfileExample {
                     }
                     break;
             }
+
+            /* Get the motion profile status every loop */
+            _talon.getMotionProfileStatus(_status);
+            _heading = _talon.getActiveTrajectoryHeading();
+            _pos = _talon.getActiveTrajectoryPosition();
+            _vel = _talon.getActiveTrajectoryVelocity();
+
+            /* printfs and/or logging */
+            Instrumentation.process(_status, _pos, _vel, _heading);
         }
-        /* printfs and/or logging */
-        instrumentation.process(_status);
     }
 
     /** Start filling the MPs to all of the involved Talons. */
@@ -249,12 +258,12 @@ public class MotionProfileExample {
         /* did we get an underrun condition since last time we checked ? */
         if (_status.hasUnderrun) {
             /* better log it so we know about it */
-            instrumentation.OnUnderrun();
+            Instrumentation.OnUnderrun();
             /*
              * clear the error. This flag does not auto clear, this way
              * we never miss logging it.
              */
-            _talon.clearMotionProfileHasUnderrun();
+            _talon.clearMotionProfileHasUnderrun(0);
         }
         /*
          * just in case we are interrupting another MP and there is still buffer
@@ -262,17 +271,20 @@ public class MotionProfileExample {
          */
         _talon.clearMotionProfileTrajectories();
 
+        /* set the base trajectory period to zero, use the individual trajectory period below */
+        _talon.configMotionProfileTrajectoryPeriod(0, 30);
+
         /* This is fast since it's just into our TOP buffer */
         for (int i = 0; i < totalCnt; ++i) {
+            double positionRot = profile[i][0];
+            double velocityRPM = profile[i][1];
             /* for each point, fill our structure and pass it to API */
-            point.position = profile[i][0];
-            point.velocity = profile[i][1];
-            point.timeDur = (int) profile[i][2];
-            point.profileSlotSelect0 = 0; /* which set of gains would you like to use? */
-            /*point.velocityOnly = false;
-             * set true to not do any position
-             * servo, just velocity feedforward
-             */
+            point.position = positionRot * RobotMap.kTalonTicksPerRotation; //Convert Revolutions to Units
+            point.velocity = velocityRPM * RobotMap.kTalonTicksPerRotation / 600.0; //Convert RPM to Units/100ms
+            point.headingDeg = 0; /* future feature - not used in this example*/
+            point.profileSlotSelect0 = 0; /* which set of gains would you like to use [0,3]? */
+            point.profileSlotSelect1 = 0; /* future feature  - not used in this example - cascaded PID [0,1], leave zero */
+            point.timeDur = (int)profile[i][2];
             point.zeroPos = false;
             if (i == 0)
                 point.zeroPos = true; /* set this to true on the first point */
@@ -284,7 +296,6 @@ public class MotionProfileExample {
             _talon.pushMotionProfileTrajectory(point);
         }
     }
-
     /**
      * Called by application to signal Talon to start the buffered MP (when it's
      * able to).

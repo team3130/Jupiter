@@ -1,6 +1,7 @@
 package frc.team3130.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -52,6 +53,22 @@ public class Chassis extends Subsystem{
         m_drive.arcadeDrive(moveThrottle, turnThrottle, squaredinputs);
     }
 
+    public static void configMP() {
+
+
+        m_leftMotor.config_kP(0, 0.1, 0);
+        m_leftMotor.config_kI(0, 0.0, 0);
+        m_leftMotor.config_kD(0, 0.0, 0);
+        m_leftMotor.config_kF(0, 1023.0 / 7200.0, 0);
+        m_leftMotor.configNeutralDeadband(0.1, 0);
+        /* Status 10 provides the trajectory target for motion profile AND motion magic */
+        m_leftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 0);
+        /* Our profile uses 10ms timing */
+        m_leftMotor.configMotionProfileTrajectoryPeriod(10, 0);
+    }
+    public static void printVelocity(){
+        System.out.println(m_leftMotor.getSelectedSensorVelocity());
+    }
 
 
 }
