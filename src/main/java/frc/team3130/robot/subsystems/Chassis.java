@@ -34,12 +34,9 @@ public class Chassis extends Subsystem{
     	m_leftMotor.configFactoryDefault(FeedbackDevice.CTRE_MagEncoder_Relative.value);
     	m_rightMotor.configFactoryDefault(FeedbackDevice.CTRE_MagEncoder_Relative.value);
 
-
         m_leftMotor.setNeutralMode(NeutralMode.Brake);
         m_rightMotor.setNeutralMode(NeutralMode.Brake);
 
-
-        
         m_drive = new DifferentialDrive(m_leftMotor, m_rightMotor);
         m_drive.setSafetyEnabled(false);
 

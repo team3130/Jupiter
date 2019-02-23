@@ -44,12 +44,12 @@ public class Robot extends TimedRobot {
     CameraServer.getInstance().startAutomaticCapture();
     CameraServer.getInstance().addAxisCamera("10.31.30.12");
 
-    tantanMethod = new MotionProfileExample(Chassis.getTalon());
+    //tantanMethod = new MotionProfileExample(Chassis.getTalon());
   }
 
   @Override
   public void disabledInit(){
-    tantanMethod.reset();
+    //tantanMethod.reset();
   }
 
   /**
@@ -111,7 +111,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
-    Chassis.printVelocity();
   }
 
 

@@ -29,10 +29,10 @@ public class DefaultDrive extends Command {
   protected void execute() {
 
     double moveSpeed = -OI.gamepad.getRawAxis(1); //joystick's y axis is inverted
-    double turnSpeed = -OI.gamepad.getRawAxis(4);
+    double turnSpeed =  OI.gamepad.getRawAxis(4);
 
     
-    double turnThrottle = (0.5 * OI.stickR.getRawAxis(2)-0.5);
+    double turnThrottle = 1.0; // (0.5 * OI.stickR.getRawAxis(2)-0.5);
     Chassis.DriveArcade(moveSpeed, turnThrottle * turnSpeed, true);
   }
 
