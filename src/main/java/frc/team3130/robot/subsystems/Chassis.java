@@ -40,6 +40,7 @@ public class Chassis extends Subsystem{
         m_drive = new DifferentialDrive(m_leftMotor, m_rightMotor);
         m_drive.setSafetyEnabled(false);
 
+        m_leftMotor.setSensorPhase(true);
     }
 
     public void initDefaultCommand() {
@@ -55,7 +56,6 @@ public class Chassis extends Subsystem{
 
     public static void configMP() {
 
-
         m_leftMotor.config_kP(0, 0.1, 0);
         m_leftMotor.config_kI(0, 0.0, 0);
         m_leftMotor.config_kD(0, 0.0, 0);
@@ -63,15 +63,28 @@ public class Chassis extends Subsystem{
         m_leftMotor.configNeutralDeadband(0.1, 0);
         /* Status 10 provides the trajectory target for motion profile AND motion magic */
         m_leftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 0);
-        /* Our profile uses 10ms timing */
-        m_leftMotor.configMotionProfileTrajectoryPeriod(10, 0);
+        /* Our profile uses 10ms timing so do not add the base duration */
+        m_leftMotor.configMotionProfileTrajectoryPeriod(0, 0);
+
+        m_rightMotor.config_kP(0, 0.1, 0);
+        m_rightMotor.config_kI(0, 0.0, 0);
+        m_rightMotor.config_kD(0, 0.0, 0);
+        m_rightMotor.config_kF(0, 1023.0 / 7200.0, 0);
+        m_rightMotor.configNeutralDeadband(0.1, 0);
+        /* Status 10 provides the trajectory target for motion profile AND motion magic */
+        m_rightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 0);
+        /* Our profile uses 10ms timing so do not add the base duration */
+        m_rightMotor.configMotionProfileTrajectoryPeriod(0, 0);
     }
     public static void printVelocity(){
-        System.out.println(m_leftMotor.getSelectedSensorVelocity());
+        System.out.format("Left:%d\tRight:%d%n", m_leftMotor.getSelectedSensorVelocity(), m_rightMotor.getSelectedSensorVelocity());
     }
 
-    public static WPI_TalonSRX getTalon(){
+    public static WPI_TalonSRX getTalonLeft(){
         return m_leftMotor;
+    }
+    public static WPI_TalonSRX getTalonRight(){
+        return m_rightMotor;
     }
 
 
