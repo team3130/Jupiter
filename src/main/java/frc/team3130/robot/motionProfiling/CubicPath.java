@@ -50,6 +50,9 @@ public class CubicPath {
     public CubicPath(double maxAcceleration, double cruiseVelocity) {
         this.maxAcceleration = maxAcceleration;
         this.cruiseVelocity = cruiseVelocity;
+        if (Double.isNaN(maxAcceleration) || Double.isNaN(cruiseVelocity) || maxAcceleration <= 0 || cruiseVelocity <= 0) {
+            throw new IllegalArgumentException("Max acceleration and cruise velocity must be positive");
+        }
     }
 
     public CubicPath withEnterVelocity(double velocity) {
@@ -67,19 +70,45 @@ public class CubicPath {
     private void update() {
         a = -2*D/(L*L*L) +A/(L*L);
         b = 3*D/(L*L) -A/L;
-        destination = L * Math.sqrt(1 + Math.pow(3*a*L*L + 2*b*L, 2));
+    }
+
+    private double updateDistance(int N) {
+        destination = 0;
+        double dx = L / N;
+        for(int i = 0; i < N; ++i) {
+            destination += Math.hypot(1, derivative(i*dx));
+        }
+        destination *= dx;
+        return destination;
+    }
+
+    private double derivative(double x) {
+        return 3*a*x*x + 2*b*x;
+    }
+
+    /**
+     * Set the time duration between the way points
+     * @param deltaTime time steps duration. Think of 0.01 seconds
+     * @return this
+     */
+    public CubicPath withDuration(double deltaTime) {
+        if (Double.isNaN(deltaTime) || deltaTime <= 0 || deltaTime > 0.128) {
+            throw new IllegalArgumentException("The time duration has to be in (0,0.128]");
+        }
+        dt = deltaTime;
+        return this;
     }
 
     /**
      * Creates a cubic curve segment from origin to a given control point.
      * The spline is guaranteed to end at the control point exactly at the given slope.
      *
-     * @param x
-     *            The X component of the end point
-     * @param y
-     *            The Y component of the end point
+     * @param distance
+     *            The X component of the end point (straight distance)
+     * @param offset
+     *            The Y component of the end point (offset to the left)
      * @param slope
-     *            The slope, tan of the angle, first derivative, at the end point
+     *            The slope, tan of the angle at the end point (positive is to the left)
      * @throws IllegalArgumentException
      *             if the X is negative or any parameter is NaN.
      *
@@ -89,27 +118,15 @@ public class CubicPath {
      * .withDestination(5.0, 2.0, 1.0);
      * Units can be feet, meters, encoder units or whatever. Just convert them properly.
      */
-    public CubicPath withDestination(double x, double y, double slope) {
-        if (Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(slope) || x <= 0) {
-            throw new IllegalArgumentException("The end point has to be strictly positive");
+    public CubicPath generateSequence(double distance, double offset, double slope) {
+        if (Double.isNaN(distance) || Double.isNaN(offset) || Double.isNaN(slope) || distance <= 0) {
+            throw new IllegalArgumentException("The distance has to be strictly positive");
         }
-        L = x;
-        D = y;
+        L = distance;
+        D = offset;
         A = slope;
         update();
-        return this;
-    }
-
-    /**
-     * Generate the main sequence of the way points for the center of the robot
-     * @param deltaTime time steps duration. Think of 0.01 seconds
-     * @return this
-     */
-    public CubicPath generateSequence(double deltaTime) {
-        dt = deltaTime;
-        if (Double.isNaN(maxAcceleration) || Double.isNaN(cruiseVelocity) || maxAcceleration <= 0 || cruiseVelocity <= 0) {
-            throw new IllegalArgumentException("Max acceleration and cruise velocity must be positive");
-        }
+        updateDistance(100);
         double enterAcceleration = cruiseVelocity > enterVelocity ? maxAcceleration : -maxAcceleration;
         double exitAcceleration = exitVelocity > cruiseVelocity ? maxAcceleration : -maxAcceleration;
         double enterPeriod = (cruiseVelocity - enterVelocity)/enterAcceleration;
@@ -158,24 +175,8 @@ public class CubicPath {
         return this;
     }
 
-    public int size() {
+    public int getSize() {
         return mmPosition.size();
-    }
-
-    public double length() {
-        return destination;
-    }
-
-    public double getPosition(int i) {
-        return mmPosition.get(i);
-    }
-
-    public double getAlpha(int i) {
-        return mmAlpha.get(i);
-    }
-
-    public double getVelocity(int i) {
-        return mmVelocity.get(i);
     }
 
     public double[][] profileLeft;

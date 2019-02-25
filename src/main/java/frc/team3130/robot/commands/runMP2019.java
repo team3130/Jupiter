@@ -25,12 +25,10 @@ public class runMP2019 extends Command {
         // Lets use wheel revolutions for the distance and rev/sec for velocity for now
         // Then the robot width is 19" / (6" x pi) = 1.007 (surprise!)
         CubicPath path = new CubicPath(1, 2)
-                .withEnterVelocity(0)
-                .withExitVelocity(0)
-                .withDestination(3, 1.5, 0.0)
-                .generateSequence(0.01)
+                .withDuration(0.01)
+                .generateSequence(3, 1.5, 0.0)
                 .generateProfiles(1.007);
-        int totalCnt = path.size();
+        int totalCnt = path.getSize();
         pointStreamLeft = new BufferedTrajectoryPointStream();
         pointStreamRight = new BufferedTrajectoryPointStream();
         /* create an empty point */
