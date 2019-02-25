@@ -27,7 +27,7 @@ public class runMP2019 extends Command {
         CubicPath path = new CubicPath(1, 2)
                 .withEnterVelocity(0)
                 .withExitVelocity(0)
-                .withDestination(5, 0, 0.0)
+                .withDestination(3, 1.5, 0.0)
                 .generateSequence(0.01)
                 .generateProfiles(1.007);
         int totalCnt = path.size();
@@ -44,15 +44,19 @@ public class runMP2019 extends Command {
 
             /* for each point, fill our structure and pass it to API */
             point.position = path.profileLeft[i][0] * RobotMap.kTalonTicksPerRotation; //Convert Revolutions to Units
-            point.velocity = path.profileLeft[i][1] * RobotMap.kTalonTicksPerRotation / 600.0; //Convert RPM to Units/100ms
+            point.velocity = path.profileLeft[i][1] * RobotMap.kTalonTicksPerRotation / 10.0; //Convert RPS to Units/100ms
             point.timeDur = (int)path.profileLeft[i][2];
             pointStreamLeft.Write(point);
 
             /* for each point, fill our structure and pass it to API */
-            point.position = path.profileRight[i][0] * RobotMap.kTalonTicksPerRotation; //Convert Revolutions to Units
-            point.velocity = path.profileRight[i][1] * RobotMap.kTalonTicksPerRotation / 600.0; //Convert RPM to Units/100ms
+            point.position = -path.profileRight[i][0] * RobotMap.kTalonTicksPerRotation; //Convert Revolutions to Units
+            point.velocity = -path.profileRight[i][1] * RobotMap.kTalonTicksPerRotation / 10.0; //Convert RPS to Units/100ms
             point.timeDur = (int)path.profileRight[i][2];
             pointStreamRight.Write(point);
+
+            System.out.format("%5d: L%8.3f %8.3f  === R%8.3f %8.3f%n", i,
+                    path.profileLeft[i][0], path.profileLeft[i][1],
+                    path.profileRight[i][0], path.profileRight[i][1]);
         }
         Chassis.getTalonLeft().startMotionProfile(pointStreamLeft, 5, ControlMode.MotionProfile);
         Chassis.getTalonRight().startMotionProfile(pointStreamRight, 5, ControlMode.MotionProfile);

@@ -41,6 +41,7 @@ public class Chassis extends Subsystem{
         m_drive.setSafetyEnabled(false);
 
         m_leftMotor.setSensorPhase(true);
+        m_rightMotor.setSensorPhase(true);
     }
 
     public void initDefaultCommand() {

@@ -192,19 +192,20 @@ public class CubicPath {
         profileLeft = new double[N][3];
         profileRight = new double[N][3];
         double oldAlpha = 0;
+        double totalLag = 0;
         for(int i = 0; i < N; i++) {
             double yaw = mmAlpha.get(i) - oldAlpha;
             double deltaS = yaw * R;
             double deltaV = deltaS/dt;
-            profileLeft[i][0] = mmPosition.get(i) - deltaS;
+            totalLag += deltaS;
+            profileLeft[i][0] = mmPosition.get(i) - totalLag;
             profileLeft[i][1] = mmVelocity.get(i) - deltaV;
             profileLeft[i][2] = dt;
-            profileRight[i][0] = mmPosition.get(i) + deltaS;
+            profileRight[i][0] = mmPosition.get(i) + totalLag;
             profileRight[i][1] = mmVelocity.get(i) + deltaV;
             profileRight[i][2] = dt;
             oldAlpha = mmAlpha.get(i);
         }
         return this;
     }
-
 }
