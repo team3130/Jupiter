@@ -3,6 +3,7 @@ package frc.team3130.robot.commands;
 import com.ctre.phoenix.motion.BufferedTrajectoryPointStream;
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.team3130.robot.OI;
 import frc.team3130.robot.RobotMap;
@@ -24,13 +25,15 @@ public class runMP2019 extends Command {
         Chassis.configMP();
         // Lets use wheel revolutions for the distance and rev/sec for velocity for now
         // Then the robot width is 19" / (6" x pi) = 1.007 (surprise!)
-        CubicPath path = new CubicPath(1, 2)
-                .withDuration(0.01)
-                .generateSequence(3, 1.5, 0.0)
-                .generateProfiles(1.007);
+        double timeStart = Timer.getFPGATimestamp();
+        CubicPath path = new CubicPath(1.5, 5);
+        path.withDuration(0.01);
+        path.generateSequence(3, 1.0, 0.5);
+        path.generateProfiles(1.007);
         int totalCnt = path.getSize();
         pointStreamLeft = new BufferedTrajectoryPointStream();
         pointStreamRight = new BufferedTrajectoryPointStream();
+        //System.out.format("Time to create buffers: %f%n", Timer.getFPGATimestamp() - timeStart);
         /* create an empty point */
         TrajectoryPoint point = new TrajectoryPoint();
         point.headingDeg = 0; /* future feature - not used in this example*/
@@ -51,10 +54,6 @@ public class runMP2019 extends Command {
             point.velocity = -path.profileRight[i][1] * RobotMap.kTalonTicksPerRotation / 10.0; //Convert RPS to Units/100ms
             point.timeDur = (int)path.profileRight[i][2];
             pointStreamRight.Write(point);
-
-            System.out.format("%5d: L%8.3f %8.3f  === R%8.3f %8.3f%n", i,
-                    path.profileLeft[i][0], path.profileLeft[i][1],
-                    path.profileRight[i][0], path.profileRight[i][1]);
         }
         Chassis.getTalonLeft().startMotionProfile(pointStreamLeft, 5, ControlMode.MotionProfile);
         Chassis.getTalonRight().startMotionProfile(pointStreamRight, 5, ControlMode.MotionProfile);
@@ -62,8 +61,9 @@ public class runMP2019 extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     @Override
-    protected void execute() {
-        Chassis.printVelocity();
+    protected void execute()
+    {
+        // Chassis.printVelocity();
     }
 
     // Make this return true when this Command no longer needs to run execute()

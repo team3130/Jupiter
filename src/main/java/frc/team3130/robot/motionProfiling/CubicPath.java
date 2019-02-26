@@ -133,7 +133,6 @@ public class CubicPath {
         double exitPeriod = (exitVelocity - cruiseVelocity)/exitAcceleration;
         double enterDistance = enterPeriod*(enterVelocity + cruiseVelocity)/2.0;
         double exitDistance = exitPeriod*(exitVelocity + cruiseVelocity)/2.0;
-        System.out.println("dest="+ destination +" up=" + enterDistance + " dn=" + exitDistance);
         double t = 0; // to track time
         double x = 0; // to track the X coordinate for rendering derivative
         double s = 0; // to track the linear travel distance

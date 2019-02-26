@@ -57,7 +57,7 @@ public class Chassis extends Subsystem{
 
     public static void configMP() {
 
-        m_leftMotor.config_kP(0, 0.1, 0);
+        m_leftMotor.config_kP(0, 0.75, 0);
         m_leftMotor.config_kI(0, 0.0, 0);
         m_leftMotor.config_kD(0, 0.0, 0);
         m_leftMotor.config_kF(0, 1023.0 / 7200.0, 0);
@@ -67,7 +67,7 @@ public class Chassis extends Subsystem{
         /* Our profile uses 10ms timing so do not add the base duration */
         m_leftMotor.configMotionProfileTrajectoryPeriod(0, 0);
 
-        m_rightMotor.config_kP(0, 0.1, 0);
+        m_rightMotor.config_kP(0, 0.75, 0);
         m_rightMotor.config_kI(0, 0.0, 0);
         m_rightMotor.config_kD(0, 0.0, 0);
         m_rightMotor.config_kF(0, 1023.0 / 7200.0, 0);
