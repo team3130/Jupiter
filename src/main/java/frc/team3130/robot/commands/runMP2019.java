@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.team3130.robot.OI;
+import frc.team3130.robot.Robot;
 import frc.team3130.robot.RobotMap;
 import frc.team3130.robot.motionProfiling.CubicPath;
 import frc.team3130.robot.subsystems.Chassis;
@@ -23,13 +24,13 @@ public class runMP2019 extends Command {
     protected void initialize()
     {
         Chassis.configMP();
-        // Lets use wheel revolutions for the distance and rev/sec for velocity for now
-        // Then the robot width is 19" / (6" x pi) = 1.007 (surprise!)
+        double maxAcceleration = RobotMap.kMaxAcceleration * RobotMap.kAccelerationToEncoder;
+        double cruiseVelocity = RobotMap.kCruiseVelocity * RobotMap.kVelocityToEncoder;
         double timeStart = Timer.getFPGATimestamp();
-        CubicPath path = new CubicPath(1.5, 5);
-        path.withDuration(0.01);
-        path.generateSequence(3, 1.0, 0.5);
-        path.generateProfiles(1.007);
+        CubicPath path = new CubicPath( maxAcceleration, cruiseVelocity);
+        path.withDuration(0.1); // 10ms = 0.1 * 100ms
+        path.generateSequence(50*RobotMap.kDistanceToEncoder, 15*RobotMap.kDistanceToEncoder, 0.5); // Inches
+        path.generateProfiles(RobotMap.kFrameWidth * RobotMap.kDistanceToEncoder);
         int totalCnt = path.getSize();
         pointStreamLeft = new BufferedTrajectoryPointStream();
         pointStreamRight = new BufferedTrajectoryPointStream();
@@ -43,16 +44,19 @@ public class runMP2019 extends Command {
             point.zeroPos = i == 0;
             point.isLastPoint = (i + 1) == totalCnt;
 
+            System.out.format("LP %8.3f  RP %8.3f | LV %8.3f  RV %8.3f%n",
+                    path.profileLeft[i][0], path.profileRight[i][0],
+                    path.profileLeft[i][1], path.profileRight[i][1]);
             /* for each point, fill our structure and pass it to API */
-            point.position = path.profileLeft[i][0] * RobotMap.kTalonTicksPerRotation; //Convert Revolutions to Units
-            point.velocity = path.profileLeft[i][1] * RobotMap.kTalonTicksPerRotation / 10.0; //Convert RPS to Units/100ms
-            point.timeDur = (int)path.profileLeft[i][2];
+            point.position = path.profileLeft[i][0];
+            point.velocity = path.profileLeft[i][1];
+            point.timeDur = 10; //(int)path.profileLeft[i][2];
             pointStreamLeft.Write(point);
 
             /* for each point, fill our structure and pass it to API */
-            point.position = -path.profileRight[i][0] * RobotMap.kTalonTicksPerRotation; //Convert Revolutions to Units
-            point.velocity = -path.profileRight[i][1] * RobotMap.kTalonTicksPerRotation / 10.0; //Convert RPS to Units/100ms
-            point.timeDur = (int)path.profileRight[i][2];
+            point.position = -path.profileRight[i][0];
+            point.velocity = -path.profileRight[i][1];
+            point.timeDur = 10; //(int)path.profileRight[i][2];
             pointStreamRight.Write(point);
         }
         Chassis.getTalonLeft().startMotionProfile(pointStreamLeft, 5, ControlMode.MotionProfile);
@@ -63,7 +67,7 @@ public class runMP2019 extends Command {
     @Override
     protected void execute()
     {
-        // Chassis.printVelocity();
+        Chassis.printVelocity();
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -16,6 +16,13 @@ package frc.team3130.robot;
 public class RobotMap {
 
 	public static double kTalonTicksPerRotation = 4096;
+	public static double kFrameWidth = 19;		// Inches
+	public static double kWheelDiameter = 6;	// Inches
+	public static double kCruiseVelocity = 100;	// Inches per second
+	public static double kMaxAcceleration = 30;	// Inches per second per second
+	public static double kDistanceToEncoder = kTalonTicksPerRotation / (Math.PI * kWheelDiameter);
+	public static double kVelocityToEncoder = kTalonTicksPerRotation / (Math.PI * kWheelDiameter) / 10.0; // Per 100ms
+	public static double kAccelerationToEncoder = kTalonTicksPerRotation / (Math.PI * kWheelDiameter) / 100.0;
 
 	public static final int CAN_PNMMODULE = 1;
 

@@ -88,7 +88,9 @@ public class Chassis extends Subsystem{
         return m_rightMotor;
     }
 
-
-
+    public static double getVelocity(){
+        // The right wheel is rotating "backward" therefore minus
+        return (m_leftMotor.getSelectedSensorVelocity() - m_rightMotor.getSelectedSensorVelocity()) / 2.0;
+    }
 
 }
