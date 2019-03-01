@@ -27,9 +27,11 @@ public class runMP2019 extends Command {
         double maxAcceleration = RobotMap.kMaxAcceleration * RobotMap.kAccelerationToEncoder;
         double cruiseVelocity = RobotMap.kCruiseVelocity * RobotMap.kVelocityToEncoder;
         double timeStart = Timer.getFPGATimestamp();
+        double currentVelocity = Chassis.getVelocity();
         CubicPath path = new CubicPath( maxAcceleration, cruiseVelocity);
         path.withDuration(0.1); // 10ms = 0.1 * 100ms
-        path.generateSequence(50*RobotMap.kDistanceToEncoder, 15*RobotMap.kDistanceToEncoder, 0.5); // Inches
+        path.withEnterVelocity(currentVelocity);
+        path.generateSequence(50*RobotMap.kDistanceToEncoder, 5*RobotMap.kDistanceToEncoder, -0.7); // Inches
         path.generateProfiles(RobotMap.kFrameWidth * RobotMap.kDistanceToEncoder);
         int totalCnt = path.getSize();
         pointStreamLeft = new BufferedTrajectoryPointStream();
@@ -44,9 +46,11 @@ public class runMP2019 extends Command {
             point.zeroPos = i == 0;
             point.isLastPoint = (i + 1) == totalCnt;
 
-            System.out.format("LP %8.3f  RP %8.3f | LV %8.3f  RV %8.3f%n",
+/*            if(i%10 == 0)
+                System.out.format("LP %8.3f  RP %8.3f | LV %8.3f  RV %8.3f%n",
                     path.profileLeft[i][0], path.profileRight[i][0],
-                    path.profileLeft[i][1], path.profileRight[i][1]);
+                    path.profileLeft[i][1], path.profileRight[i][1]); */
+
             /* for each point, fill our structure and pass it to API */
             point.position = path.profileLeft[i][0];
             point.velocity = path.profileLeft[i][1];
