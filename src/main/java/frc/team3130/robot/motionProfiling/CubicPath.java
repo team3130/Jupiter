@@ -72,22 +72,33 @@ public class CubicPath {
         b = 3*D/(L*L) -A/L;
     }
 
-    private double updateDistance(int N) {
+    /**
+     * Calculate the total distance along the curve which is an integral of the hypot(dx, dy)
+     * I couldn't find a generic integral using calculus so let's do it numerically.
+     * @param N the number of chunks to integrate over.
+     */
+    private void updateDistance(int N) {
         destination = 0;
         double dx = L / N;
         for(int i = 0; i < N; ++i) {
             destination += Math.hypot(1, derivative(i*dx));
         }
         destination *= dx;
-        return destination;
     }
 
+    /**
+     * Assumed function for the curve is y = a*x^3 + b*x^2.
+     * Therefore the derivative is y = 3*a*x^2 + 2*b*x
+     * @param x the x coordinate
+     * @return the value of the derivative at x
+     */
     private double derivative(double x) {
         return 3*a*x*x + 2*b*x;
     }
 
     /**
      * Set the time duration between the way points
+     * TODO: review the dt logic as the Talon time unit is 0.1sec while the way point duration is in 0.001sec.
      * @param deltaTime time steps duration. Think of 0.01 seconds
      * @return this
      */
@@ -129,10 +140,6 @@ public class CubicPath {
         updateDistance(100);
         double enterAcceleration = cruiseVelocity > enterVelocity ? maxAcceleration : -maxAcceleration;
         double exitAcceleration = exitVelocity > cruiseVelocity ? maxAcceleration : -maxAcceleration;
-        double enterPeriod = (cruiseVelocity - enterVelocity)/enterAcceleration;
-        double exitPeriod = (exitVelocity - cruiseVelocity)/exitAcceleration;
-        double enterDistance = enterPeriod*(enterVelocity + cruiseVelocity)/2.0;
-        double exitDistance = exitPeriod*(exitVelocity + cruiseVelocity)/2.0;
         double t = 0; // to track time
         double x = 0; // to track the X coordinate for rendering derivative
         double s = 0; // to track the linear travel distance
@@ -189,8 +196,8 @@ public class CubicPath {
     public CubicPath generateProfiles(double width) {
         int N = mmPosition.size();
         double R = width/2.0;
-        profileLeft = new double[N][3];
-        profileRight = new double[N][3];
+        profileLeft = new double[N][2];
+        profileRight = new double[N][2];
         double oldAlpha = 0;
         double totalLag = 0;
         for(int i = 0; i < N; i++) {
@@ -200,10 +207,8 @@ public class CubicPath {
             totalLag += deltaS;
             profileLeft[i][0] = mmPosition.get(i) - totalLag;
             profileLeft[i][1] = mmVelocity.get(i) - deltaV;
-            profileLeft[i][2] = dt;
             profileRight[i][0] = mmPosition.get(i) + totalLag;
             profileRight[i][1] = mmVelocity.get(i) + deltaV;
-            profileRight[i][2] = dt;
             oldAlpha = mmAlpha.get(i);
         }
         return this;

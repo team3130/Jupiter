@@ -1,13 +1,10 @@
 package frc.team3130.robot;
 
-import com.ctre.phoenix.motion.SetValueMotionProfile;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import frc.team3130.robot.motionProfiling.MotionProfileExample;
 import frc.team3130.robot.subsystems.Chassis;
 
