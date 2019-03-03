@@ -21,11 +21,13 @@ public class Limelight {
     private static NetworkTableEntry tx; //x angle offset from crosshair, range of -27 to 27
     private static NetworkTableEntry ty; //y angle offset from crosshair, range of -20.5 to 20.5
     private static NetworkTableEntry ta;
+    private static NetworkTableEntry ts; // Skew or rotation (-90 degrees to 0 degrees)
 
     private static double kLimelightTiltAngle = 32;
     private static double x_targetOffsetAngle = 0.0;
     private static double y_targetOffsetAngle = 0.0;
     private static double area = 0.0;
+    private static double skew = 0.0;
 
     public Limelight() {
         NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -33,6 +35,7 @@ public class Limelight {
         tx = table.getEntry("tx");
         ty = table.getEntry("ty");
         ta = table.getEntry("ta");
+        ts = table.getEntry("ts");
     }
 
 
@@ -43,12 +46,24 @@ public class Limelight {
             x_targetOffsetAngle = tx.getDouble(0.0);
             y_targetOffsetAngle = ty.getDouble(0.0);
             area = ta.getDouble(0.0);
+            skew = ts.getDouble(0.0);
         }else{
             //there is no valid target so set all values to 0.0
             x_targetOffsetAngle = 0.0;
             y_targetOffsetAngle = 0.0;
             area = 0.0;
+            skew = 0.0;
         }
+    }
+
+    public static double getTargetRotation() {
+        double realSkew = skew < -45 ? skew + 90 : skew;
+        // Very approximate adjustment for the camera tilt, should work for small angles
+        // Rationale: the best view is from the top which is 90 degree, no adjustment would be needed
+        // Then it gets worse as the tilt comes closer to zero degree.
+        // Ideally it would be better to do this with vectors and matrices
+        double amplify = 1.0 / (1.0-Math.cos(Math.toRadians(kLimelightTiltAngle)));
+        return amplify * realSkew;
     }
 
     public static double getdegHorizontalOffset(){

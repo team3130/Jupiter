@@ -29,8 +29,9 @@ public class runMP2019 extends Command {
         double goStraight = Limelight.getDistanceToTarget(true) - 10;
         double angularOffset = -Math.toRadians(Limelight.getdegHorizontalOffset());
         double goLeft = Math.tan(angularOffset) * goStraight - 3.5;
-        double goSlope = -0.0;
-        System.out.format("Robot is going to Go %8.3f Left %8.3f %n", goStraight, goLeft);
+        double goSlope = Math.tan(Math.toRadians(Limelight.getTargetRotation()));
+        System.out.format("Robot is going to Go %8.3f'' straight and left %8.3f with slope %8.3f%n",
+                goStraight, goLeft, goSlope);
 
         // Basic sanity check
         if(goStraight <= 0 || goStraight >= 144 || goLeft <= -144 || goLeft >= 144) return;
