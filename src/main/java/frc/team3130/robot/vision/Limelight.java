@@ -22,6 +22,7 @@ public class Limelight {
     private static NetworkTableEntry ty; //y angle offset from crosshair, range of -20.5 to 20.5
     private static NetworkTableEntry ta;
 
+    private static double kLimelightTiltAngle = 30.246;
     private static double x_targetOffsetAngle = 0.0;
     private static double y_targetOffsetAngle = 0.0;
     private static double area = 0.0;
@@ -55,7 +56,9 @@ public class Limelight {
     }
 
     public static double getDistanceToTarget(boolean isHatch){
-        double angle = RobotMap.kLimelightTiltAngle + y_targetOffsetAngle;
+        if(area == 0.0) return 0.0;
+
+        double angle = kLimelightTiltAngle + y_targetOffsetAngle;
         double hLimelight = RobotMap.kLimelightHeight;
 
         double hTarget;
@@ -68,6 +71,12 @@ public class Limelight {
         return (hTarget - hLimelight) / Math.tan(Math.toRadians(angle));
     }
 
+    public static void calibrate() {
+        updateData();
+        double height = RobotMap.HATCHVISIONTARGET - RobotMap.kLimelightHeight;
+        double distance = RobotMap.kLimelightCalibrateDist;
+        kLimelightTiltAngle = Math.toDegrees(Math.atan2(height, distance)) - y_targetOffsetAngle;
+    }
     /*
     How to set a parameter value (ie. pipeline to use)
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("<PUT VARIABLE NAME HERE>").setNumber(<TO SET VALUE>);

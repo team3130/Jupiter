@@ -26,12 +26,12 @@ public class RobotMap {
     public static final int CAN_LEFTMOTOR= 2;
 	public static final int CAN_RIGHTMOTOR = 3;
 
-	public static double kLimelightTiltAngle = 30;
-	public static double kLimelightHeight = 13;
+	public static double kLimelightCalibrateDist = 36;	// Exact horizontal distance between hatch target and lens
+	public static double kLimelightHeight = 13.5;
 
 	/**
 	 * Field parameters
 	 */
-	public static final double HATCHVISIONTARGET = 28.5;
-	public static final double PORTVISIONTARGET = 36.125;
+	public static final double HATCHVISIONTARGET = 31.25;
+	public static final double PORTVISIONTARGET = 38.75;
 }

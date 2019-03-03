@@ -22,15 +22,19 @@ public class runMP2019 extends Command {
     @Override
     protected void initialize()
     {
-        // Here should go querying the camera and calculating where to go
-        // In this example we convert inches and inches per second into Encoder units per 100ms time units
-        double goStraight = Limelight.getDistanceToTarget(true) * RobotMap.kDistanceToEncoder;
-        double angularOffset = Math.toRadians(Limelight.getdegHorizontalOffset());
-        double goLeft = Math.tan(angularOffset) * goStraight * RobotMap.kDistanceToEncoder;
-        double goSlope = -0.0;
         double maxAcceleration = 30 * RobotMap.kAccelerationToEncoder;
         double cruiseVelocity = 100 * RobotMap.kVelocityToEncoder;
-        System.out.format("Go %8.3f Left %8.3f", goStraight, goLeft);
+
+        Limelight.updateData();
+        double goStraight = Limelight.getDistanceToTarget(true) - 10;
+        double angularOffset = -Math.toRadians(Limelight.getdegHorizontalOffset());
+        double goLeft = Math.tan(angularOffset) * goStraight - 3.5;
+        double goSlope = -0.0;
+        System.out.format("Robot is going to Go %8.3f Left %8.3f %n", goStraight, goLeft);
+
+        /* Convert distances from inches to encoder units */
+        goStraight *= RobotMap.kDistanceToEncoder;
+        goLeft *= RobotMap.kDistanceToEncoder;
 
         Chassis.configMP();
         double currentVelocity = Chassis.getVelocity();
@@ -38,7 +42,7 @@ public class runMP2019 extends Command {
                 .withDuration(0.1) // 10ms = 0.1 * 100ms
                 .withEnterVelocity(currentVelocity)
                 .withExitVelocity(0)
-                .generateSequence(goStraight-4.0, goLeft, goSlope)
+                .generateSequence(goStraight, goLeft, goSlope)
                 .generateProfiles(RobotMap.kFrameWidth * RobotMap.kDistanceToEncoder);
         int totalCnt = path.getSize();
 
