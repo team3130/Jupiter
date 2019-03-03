@@ -32,6 +32,9 @@ public class runMP2019 extends Command {
         double goSlope = -0.0;
         System.out.format("Robot is going to Go %8.3f Left %8.3f %n", goStraight, goLeft);
 
+        // Basic sanity check
+        if(goStraight <= 0 || goStraight >= 144 || goLeft <= -144 || goLeft >= 144) return;
+
         /* Convert distances from inches to encoder units */
         goStraight *= RobotMap.kDistanceToEncoder;
         goLeft *= RobotMap.kDistanceToEncoder;

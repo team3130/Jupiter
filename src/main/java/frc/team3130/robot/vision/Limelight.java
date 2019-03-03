@@ -22,7 +22,7 @@ public class Limelight {
     private static NetworkTableEntry ty; //y angle offset from crosshair, range of -20.5 to 20.5
     private static NetworkTableEntry ta;
 
-    private static double kLimelightTiltAngle = 30.246;
+    private static double kLimelightTiltAngle = 32;
     private static double x_targetOffsetAngle = 0.0;
     private static double y_targetOffsetAngle = 0.0;
     private static double area = 0.0;
