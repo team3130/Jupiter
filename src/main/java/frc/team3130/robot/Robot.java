@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team3130.robot.motionProfiling.MotionProfileExample;
 import frc.team3130.robot.subsystems.Chassis;
+import frc.team3130.robot.vision.Limelight;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,8 +39,9 @@ public class Robot extends TimedRobot {
     OI.GetInstance();
 
     Chassis.GetInstance();
-    CameraServer.getInstance().startAutomaticCapture();
-    CameraServer.getInstance().addAxisCamera("10.31.30.12");
+    Limelight.GetInstance();
+//    CameraServer.getInstance().startAutomaticCapture();
+//    CameraServer.getInstance().addAxisCamera("10.31.30.12");
 
     //tantanMethod = new MotionProfileExample(Chassis.getTalon());
   }

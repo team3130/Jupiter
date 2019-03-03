@@ -8,6 +8,7 @@ import frc.team3130.robot.OI;
 import frc.team3130.robot.RobotMap;
 import frc.team3130.robot.motionProfiling.CubicPath;
 import frc.team3130.robot.subsystems.Chassis;
+import frc.team3130.robot.vision.Limelight;
 
 public class runMP2019 extends Command {
     private BufferedTrajectoryPointStream pointStreamLeft = new BufferedTrajectoryPointStream();
@@ -23,11 +24,13 @@ public class runMP2019 extends Command {
     {
         // Here should go querying the camera and calculating where to go
         // In this example we convert inches and inches per second into Encoder units per 100ms time units
-        double goStraight = 50.0 * RobotMap.kDistanceToEncoder;
-        double goLeft = 5.0 * RobotMap.kDistanceToEncoder;
-        double goSlope = -0.7;
+        double goStraight = Limelight.getDistanceToTarget(true) * RobotMap.kDistanceToEncoder;
+        double angularOffset = Math.toRadians(Limelight.getdegHorizontalOffset());
+        double goLeft = Math.tan(angularOffset) * goStraight * RobotMap.kDistanceToEncoder;
+        double goSlope = -0.0;
         double maxAcceleration = 30 * RobotMap.kAccelerationToEncoder;
         double cruiseVelocity = 100 * RobotMap.kVelocityToEncoder;
+        System.out.format("Go %8.3f Left %8.3f", goStraight, goLeft);
 
         Chassis.configMP();
         double currentVelocity = Chassis.getVelocity();
@@ -35,7 +38,7 @@ public class runMP2019 extends Command {
                 .withDuration(0.1) // 10ms = 0.1 * 100ms
                 .withEnterVelocity(currentVelocity)
                 .withExitVelocity(0)
-                .generateSequence(goStraight, goLeft, goSlope)
+                .generateSequence(goStraight-4.0, goLeft, goSlope)
                 .generateProfiles(RobotMap.kFrameWidth * RobotMap.kDistanceToEncoder);
         int totalCnt = path.getSize();
 

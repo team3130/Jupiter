@@ -26,5 +26,12 @@ public class RobotMap {
     public static final int CAN_LEFTMOTOR= 2;
 	public static final int CAN_RIGHTMOTOR = 3;
 
-	
+	public static double kLimelightTiltAngle = 30;
+	public static double kLimelightHeight = 13;
+
+	/**
+	 * Field parameters
+	 */
+	public static final double HATCHVISIONTARGET = 28.5;
+	public static final double PORTVISIONTARGET = 36.125;
 }
