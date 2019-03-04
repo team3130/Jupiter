@@ -26,10 +26,15 @@ public class runMP2019 extends Command {
         double cruiseVelocity = 100 * RobotMap.kVelocityToEncoder;
 
         Limelight.updateData();
-        double goStraight = Limelight.getDistanceToTarget(true) - 10;
+        double goStraight = Limelight.getDistanceToTarget(true) - RobotMap.kLimelightBumper;
         double angularOffset = -Math.toRadians(Limelight.getdegHorizontalOffset());
-        double goLeft = Math.tan(angularOffset) * goStraight - 3.5;
-        double goSlope = Math.tan(Math.toRadians(Limelight.getTargetRotation()));
+        double goLeft = Math.tan(angularOffset) * goStraight - RobotMap.kLimelightOffset;
+        double goSlope = Limelight.getTargetRotationTan();
+
+        // Magic boost. To be deleted when(if) a real rotation is implemented
+        // A linear approximation from the data collected with the software robot
+        goSlope *= (0.52/32)*(goStraight+RobotMap.kLimelightBumper-18)+1.238;
+
         System.out.format("Robot is going to Go %8.3f'' straight and left %8.3f with slope %8.3f%n",
                 goStraight, goLeft, goSlope);
 

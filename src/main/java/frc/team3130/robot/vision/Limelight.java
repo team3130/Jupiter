@@ -56,14 +56,18 @@ public class Limelight {
         }
     }
 
-    public static double getTargetRotation() {
-        double realSkew = skew < -45 ? skew + 90 : skew;
+    public static double getTargetRotationTan() {
+        double realSkew = Math.toRadians(skew < -45 ? skew + 90 : skew);
         // Very approximate adjustment for the camera tilt, should work for small angles
         // Rationale: the best view is from the top which is 90 degree, no adjustment would be needed
         // Then it gets worse as the tilt comes closer to zero degree.
         // Ideally it would be better to do this with vectors and matrices
-        double amplify = 1.0 / (1.0-Math.cos(Math.toRadians(kLimelightTiltAngle)));
-        return amplify * realSkew;
+        // TAN(new) = COS(ty)*TAN(skew)/SIN(cam+ty)
+        double ty = Math.toRadians(y_targetOffsetAngle);
+        double cam = Math.toRadians(kLimelightTiltAngle);
+        double tanRot = Math.cos(ty)*Math.tan(realSkew)/Math.sin(cam+ty);
+        System.out.format("Real skew:%8.3f, rot:%8.3f %n", realSkew, tanRot);
+        return tanRot;
     }
 
     public static double getdegHorizontalOffset(){

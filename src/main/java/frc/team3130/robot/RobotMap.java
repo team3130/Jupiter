@@ -28,6 +28,8 @@ public class RobotMap {
 
 	public static double kLimelightCalibrateDist = 36;	// Exact horizontal distance between hatch target and lens
 	public static double kLimelightHeight = 13.5;
+	public static double kLimelightOffset = 4.0;    // Offset to the right side
+	public static double kLimelightBumper = 10.0;   // Depth of the camera from the front bumper
 
 	/**
 	 * Field parameters
