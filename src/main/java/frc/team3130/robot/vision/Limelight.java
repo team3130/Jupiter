@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team3130.robot.vision.Matrix;
 import frc.team3130.robot.RobotMap;
 
 
@@ -28,6 +29,7 @@ public class Limelight {
     private static double y_targetOffsetAngle = 0.0;
     private static double area = 0.0;
     private static double skew = 0.0;
+    private static Matrix R;
 
     public Limelight() {
         NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -56,6 +58,23 @@ public class Limelight {
         }
     }
 
+    public static Matrix getTargetVector(boolean isHatch) {
+        if (area == 0.0) return null;
+        Matrix t = new Matrix(
+                Math.tan(x_targetOffsetAngle),
+                Math.tan(y_targetOffsetAngle),
+                1
+        );
+        double hTarget;
+        if (isHatch) {
+            hTarget = RobotMap.HATCHVISIONTARGET;
+        } else {
+            hTarget = RobotMap.PORTVISIONTARGET;
+        }
+        Matrix e = R.multiply(t);
+        return e.multiply(hTarget / e.get(0, 1)).add(new Matrix(0.0, -hTarget, 0.0));
+    }
+
     public static double getTargetRotationTan() {
         double realSkew = Math.toRadians(skew < -45 ? skew + 90 : skew);
         // Very approximate adjustment for the camera tilt, should work for small angles
@@ -63,11 +82,15 @@ public class Limelight {
         // Then it gets worse as the tilt comes closer to zero degree.
         // Ideally it would be better to do this with vectors and matrices
         // TAN(new) = COS(ty)*TAN(skew)/SIN(cam+ty)
+        double tx = Math.toRadians(x_targetOffsetAngle);
         double ty = Math.toRadians(y_targetOffsetAngle);
         double cam = Math.toRadians(kLimelightTiltAngle);
-        double tanRot = Math.cos(ty)*Math.tan(realSkew)/Math.sin(cam+ty);
-        System.out.format("Real skew:%8.3f, rot:%8.3f %n", realSkew, tanRot);
-        return tanRot;
+        double elev = cam + ty;
+        if(elev < -0.001 && 0.001 < elev)
+            return Math.atan2(Math.cos(ty)*Math.tan(realSkew), Math.sin(elev))
+                    + Math.acos(Math.cos(tx)*Math.cos(elev));
+        else
+            return 0;
     }
 
     public static double getdegHorizontalOffset(){
