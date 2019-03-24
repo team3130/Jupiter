@@ -1,4 +1,4 @@
-package frc.team3130.robot.motionProfiling;
+package frc.team3130.robot.tantanDrive;
 
 public class GeneratedMotionProfile {
     public static final int kNumPoints = 185;

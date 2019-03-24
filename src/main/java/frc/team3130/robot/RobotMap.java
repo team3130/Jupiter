@@ -15,6 +15,7 @@ package frc.team3130.robot;
  */
 public class RobotMap {
 
+	public static double kChassisWidth = 19.0;
 	public static double kTalonTicksPerRotation = 4096;
 	public static double kFrameWidth = 19;		// Inches
 	public static double kWheelDiameter = 6;	// Inches
@@ -26,10 +27,13 @@ public class RobotMap {
     public static final int CAN_LEFTMOTOR= 2;
 	public static final int CAN_RIGHTMOTOR = 3;
 
+	//Limelight
+	public static double kLimelightTiltAngle = 0.53;
+	public static double kLimelightForward = 10.5;   // Depth of the camera from the frame pivot (inches)
 	public static double kLimelightCalibrateDist = 36;	// Exact horizontal distance between hatch target and lens
 	public static double kLimelightHeight = 13.5;
 	public static double kLimelightOffset = 4.0;    // Offset to the right side
-	public static double kLimelightBumper = 10.0;   // Depth of the camera from the front bumper
+	public static double kLimelightBumper = 6.0;   // Depth of the camera from the front bumper
 
 	/**
 	 * Field parameters

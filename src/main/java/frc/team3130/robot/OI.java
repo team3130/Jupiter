@@ -3,8 +3,7 @@ package frc.team3130.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
-import frc.team3130.robot.commands.StartProfile;
-import frc.team3130.robot.commands.runMP2019;
+import frc.team3130.robot.autoCommands.AimAssist;
 
 public class OI {
     private class JoystickTrigger extends Trigger {
@@ -66,19 +65,17 @@ public class OI {
     public static Joystick gamepad;
 
     public static JoystickButton startProfile;
-    public static JoystickButton startProfile2019;
+    public static JoystickButton startAiming;
 
 
     private OI(){
-        //stickL = new Joystick(0);
-        //stickR = new Joystick(1);
         gamepad = new Joystick(0);
 
         startProfile = new JoystickButton(gamepad, 1);
-        startProfile2019 = new JoystickButton(gamepad, 2);
+        startAiming = new JoystickButton(gamepad, 6);
 
-        startProfile.whenPressed(new StartProfile());
-        startProfile2019.whileHeld(new runMP2019());
+        //startProfile.whenPressed(new StartProfile());
+        startAiming.whileHeld(new AimAssist());
     }
 
 

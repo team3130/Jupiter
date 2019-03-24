@@ -55,7 +55,7 @@ public class Chassis extends Subsystem{
     }
 
 
-    public static void configMP() {
+    public static void configMP(int duration) {
 
         m_leftMotor.config_kP(0, 0.75, 0);
         m_leftMotor.config_kI(0, 0.0, 0);
@@ -63,7 +63,7 @@ public class Chassis extends Subsystem{
         m_leftMotor.config_kF(0, 1023.0 / 7200.0, 0);
         m_leftMotor.configNeutralDeadband(0.1, 0);
         /* Status 10 provides the trajectory target for motion profile AND motion magic */
-        m_leftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 0);
+        m_leftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, duration, 0);
         /* Our profile uses 10ms timing so do not add the base duration */
         m_leftMotor.configMotionProfileTrajectoryPeriod(0, 0);
 
@@ -73,18 +73,37 @@ public class Chassis extends Subsystem{
         m_rightMotor.config_kF(0, 1023.0 / 7200.0, 0);
         m_rightMotor.configNeutralDeadband(0.1, 0);
         /* Status 10 provides the trajectory target for motion profile AND motion magic */
-        m_rightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 0);
+        m_rightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, duration, 0);
         /* Our profile uses 10ms timing so do not add the base duration */
         m_rightMotor.configMotionProfileTrajectoryPeriod(0, 0);
     }
+
+    /**
+     * Returns the current speed of the front left motor in native units
+     * @return Current speed of the front left motor (ticks per 0.1 seconds)
+     */
+    public static double getRawSpeedL()
+    {
+        return m_leftMotor.getSelectedSensorVelocity(0);
+    }
+
+    /**
+     * Returns the current speed of the front left motor in native units
+     * @return Current speed of the front left motor (ticks per 0.1 seconds)
+     */
+    public static double getRawSpeedR()
+    {
+        return m_rightMotor.getSelectedSensorVelocity(0);
+    }
+
     public static void printVelocity(){
         System.out.format("Left:%d\tRight:%d%n", m_leftMotor.getSelectedSensorVelocity(), m_rightMotor.getSelectedSensorVelocity());
     }
 
-    public static WPI_TalonSRX getTalonLeft(){
+    public static WPI_TalonSRX getFrontL(){
         return m_leftMotor;
     }
-    public static WPI_TalonSRX getTalonRight(){
+    public static WPI_TalonSRX getFrontR(){
         return m_rightMotor;
     }
 

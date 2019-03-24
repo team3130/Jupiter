@@ -24,7 +24,6 @@ public class Limelight {
     private static NetworkTableEntry ta;
     private static NetworkTableEntry ts; // Skew or rotation (-90 degrees to 0 degrees)
 
-    private static double kLimelightTiltAngle = -0.2857; // Radians
     private static double x_targetOffsetAngle = 0.0;
     private static double y_targetOffsetAngle = 0.0;
     private static double area = 0.0;
@@ -38,7 +37,7 @@ public class Limelight {
         ty = table.getEntry("ty");
         ta = table.getEntry("ta");
         ts = table.getEntry("ts");
-        R = Matrix.Rodrigues(new Matrix(kLimelightTiltAngle, 0, 0));
+        R = Matrix.Rodrigues(new Matrix(RobotMap.kLimelightTiltAngle, 0, 0));
     }
 
 
@@ -76,7 +75,7 @@ public class Limelight {
         }
         Matrix e = R.multiply(t);
         System.out.format("e-vector: %8.3f %8.3f %8.3f  %n", e.get(0,0), e.get(0,1), e.get(0,2));
-        return e.multiply(0.11*hTarget/e.get(0, 1));
+        return e.multiply(hTarget/e.get(0, 1));
     }
 
     public static double getTargetRotationTan() {
@@ -88,8 +87,7 @@ public class Limelight {
         // TAN(new) = COS(ty)*TAN(skew)/SIN(cam+ty) + robotRotation
         double tx = x_targetOffsetAngle;
         double ty = y_targetOffsetAngle;
-        double cam = kLimelightTiltAngle;
-        double elev = cam + ty;
+        double elev = RobotMap.kLimelightTiltAngle + ty;
         if(elev < -0.001 && 0.001 < elev)
             return Math.atan2(Math.cos(ty)*Math.tan(realSkew), Math.sin(elev))
                     + Math.copySign(Math.acos(Math.cos(tx)*Math.cos(elev)), tx);
@@ -104,7 +102,7 @@ public class Limelight {
     public static double getDistanceToTarget(boolean isHatch){
         if(area == 0.0) return 0.0;
 
-        double angle = kLimelightTiltAngle + y_targetOffsetAngle;
+        double angle = RobotMap.kLimelightTiltAngle + y_targetOffsetAngle;
         double hLimelight = RobotMap.kLimelightHeight;
 
         double hTarget;
@@ -121,7 +119,7 @@ public class Limelight {
         updateData();
         double height = RobotMap.HATCHVISIONTARGET - RobotMap.kLimelightHeight;
         double distance = RobotMap.kLimelightCalibrateDist;
-        kLimelightTiltAngle = Math.atan2(height, distance) - y_targetOffsetAngle;
+        //kLimelightTiltAngle = Math.atan2(height, distance) - y_targetOffsetAngle;
     }
     /*
     How to set a parameter value (ie. pipeline to use)

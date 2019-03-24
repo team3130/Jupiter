@@ -1,11 +1,10 @@
 package frc.team3130.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team3130.robot.motionProfiling.MotionProfileExample;
+import frc.team3130.robot.tantanDrive.MotionProfileExample;
 import frc.team3130.robot.subsystems.Chassis;
 import frc.team3130.robot.vision.Limelight;
 
