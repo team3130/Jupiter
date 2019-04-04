@@ -28,6 +28,7 @@ public class Chassis extends Subsystem{
     private static WPI_TalonSRX m_leftMotorRear;
     private static WPI_TalonSRX m_rightMotorFront;
     private static WPI_TalonSRX m_rightMotorRear;
+    private static WPI_TalonSRX m_cannon;
 
 
 
@@ -37,11 +38,16 @@ public class Chassis extends Subsystem{
         m_leftMotorRear = new WPI_TalonSRX(RobotMap.CAN_LEFTMOTORREAR);
         m_rightMotorFront = new WPI_TalonSRX(RobotMap.CAN_RIGHTMOTORFRONT);
         m_rightMotorRear = new WPI_TalonSRX(RobotMap.CAN_RIGHTMOTORREAR);
+        m_cannon = new WPI_TalonSRX(RobotMap.CAN_CANNON);
 
         m_leftMotorFront.configFactoryDefault();
         m_leftMotorRear.configFactoryDefault();
         m_rightMotorFront.configFactoryDefault();
         m_rightMotorRear.configFactoryDefault();
+        m_cannon.configFactoryDefault();
+
+        m_cannon.configVoltageCompSaturation(12.0, 0);
+        m_cannon.enableVoltageCompensation(true);
 
         m_leftMotorFront.setNeutralMode(NeutralMode.Brake);
         m_rightMotorFront.setNeutralMode(NeutralMode.Brake);
