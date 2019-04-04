@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Value;
+import frc.team3130.robot.RobotMap;
+import frc.team3130.robot.OI;
 
 import static frc.team3130.robot.OI.fireCannon;
 
@@ -37,15 +39,17 @@ public class FireCannon extends Command {
     protected void execute() {
         relay.set(Relay.Value.kOn);
         System.out.println ("Did it ton");
+
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+       return !OI.fireCannon.get();
     }
 
     // Called once after isFinished returns true
     protected void end() {
+        relay.set(Relay.Value.kOff);
     }
 
     // Called when another command which requires one or more of the same
