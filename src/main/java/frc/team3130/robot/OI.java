@@ -76,7 +76,7 @@ public class OI {
         startAiming = new JoystickButton(gamepad, 6);
 
 
-        fireCannon.whenPressed(new FireCannon());
+        fireCannon.whileHeld(new FireCannon());
     }
 
 

@@ -25,6 +25,7 @@ public class RobotMap {
 
 
 	//public static final int CAN_PNMMODULE = 1;
+	public static final int CAN_CANON = 0;
 	public static final int CAN_RIGHTMOTORFRONT = 1;
 	public static final int CAN_RIGHTMOTORREAR = 2;
     public static final int CAN_LEFTMOTORFRONT= 3;

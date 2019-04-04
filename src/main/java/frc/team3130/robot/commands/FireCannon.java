@@ -27,8 +27,8 @@ public class FireCannon extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
 
-        relay.set(Relay.Value.kForward);
-        System.out.println ("Did it right");
+        relay.set(Relay.Value.kOn);
+        System.out.println ("Did it ton");
     }
 
     // Called repeatedly when this Command is scheduled to run
