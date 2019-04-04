@@ -28,12 +28,12 @@ public class DefaultDrive extends Command {
   @Override
   protected void execute() {
 
-    double moveSpeed = -0.5 * OI.gamepad.getRawAxis(1); //joystick's y axis is inverted
-    double turnSpeed =  OI.gamepad.getRawAxis(4);
+    double moveSpeed = -OI.gamepad.getRawAxis(1); //joystick's y axis is inverted
+    double turnSpeed = OI.gamepad.getRawAxis(4); //arcade drive has left as positive, but we want right to be positive
 
-    
-    double turnThrottle = 0.5; // (0.5 * OI.stickR.getRawAxis(2)-0.5);
-    Chassis.DriveArcade(moveSpeed, turnThrottle * turnSpeed, true);
+
+    double turnThrottle = (1.0);
+    Chassis.driveArcade(moveSpeed, turnSpeed * turnThrottle, true);
   }
 
   // Make this return true when this Command no longer needs to run execute()

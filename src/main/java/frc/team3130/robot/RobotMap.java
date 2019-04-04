@@ -15,17 +15,22 @@ package frc.team3130.robot;
  */
 public class RobotMap {
 
-	public static double kChassisWidth = 19.0;
 	public static double kTalonTicksPerRotation = 4096;
 	public static double kFrameWidth = 19;		// Inches
 	public static double kWheelDiameter = 6;	// Inches
 	public static double kDistanceToEncoder = kTalonTicksPerRotation / (Math.PI * kWheelDiameter);
 	public static double kVelocityToEncoder = kDistanceToEncoder / 10.0; 		// Per 100ms
 	public static double kAccelerationToEncoder = kVelocityToEncoder / 10.0; 	// Per 100ms
+	public static double kDriveDeadband = 0.02;
 
-	public static final int CAN_PNMMODULE = 1;
-    public static final int CAN_LEFTMOTOR= 2;
-	public static final int CAN_RIGHTMOTOR = 3;
+
+	//public static final int CAN_PNMMODULE = 1;
+	public static final int CAN_RIGHTMOTORFRONT = 1;
+	public static final int CAN_RIGHTMOTORREAR = 2;
+    public static final int CAN_LEFTMOTORFRONT= 3;
+	public static final int CAN_LEFTMOTORREAR = 4;
+
+
 
 	//Limelight
 	public static double kLimelightTiltAngle = 0.53;
@@ -34,6 +39,8 @@ public class RobotMap {
 	public static double kLimelightHeight = 13.5;
 	public static double kLimelightOffset = 4.0;    // Offset to the right side
 	public static double kLimelightBumper = 6.0;   // Depth of the camera from the front bumper
+
+
 
 	/**
 	 * Field parameters

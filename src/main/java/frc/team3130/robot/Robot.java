@@ -4,9 +4,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team3130.robot.tantanDrive.MotionProfileExample;
 import frc.team3130.robot.subsystems.Chassis;
-import frc.team3130.robot.vision.Limelight;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,8 +20,6 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
 
-  /** some example logic on how one can manage an MP */
-  public static MotionProfileExample tantanMethod;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -38,7 +34,6 @@ public class Robot extends TimedRobot {
     OI.GetInstance();
 
     Chassis.GetInstance();
-    Limelight.GetInstance();
 //    CameraServer.getInstance().startAutomaticCapture();
 //    CameraServer.getInstance().addAxisCamera("10.31.30.12");
 
