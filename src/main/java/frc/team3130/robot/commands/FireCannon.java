@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Value;
 
+import static frc.team3130.robot.OI.fireCannon;
+
 /**
  *
  */
@@ -18,6 +20,7 @@ public class FireCannon extends Command {
     Relay relay = new Relay(1);
 
 
+
     public FireCannon() {
         //Put in the instance of whatever subsystem u need here
         //requires();
@@ -27,13 +30,13 @@ public class FireCannon extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
 
-        relay.set(Relay.Value.kOn);
-        System.out.println ("Did it ton");
+
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-
+        relay.set(Relay.Value.kOn);
+        System.out.println ("Did it ton");
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -43,8 +46,6 @@ public class FireCannon extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-        relay.set(Value.kOff);
-        System.out.println ("hopefully");
     }
 
     // Called when another command which requires one or more of the same
