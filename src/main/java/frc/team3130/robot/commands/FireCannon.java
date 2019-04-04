@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Value;
 import frc.team3130.robot.RobotMap;
+import frc.team3130.robot.subsystems.Cannon;
 import frc.team3130.robot.OI;
 
 import static frc.team3130.robot.OI.fireCannon;
@@ -19,13 +20,12 @@ public class FireCannon extends Command {
     ;
 
     //DigitalInput relay = new DigitalInput(1);
-    Relay relay = new Relay(1);
+    
 
 
 
     public FireCannon() {
-        //Put in the instance of whatever subsystem u need here
-        //requires();
+        requires(Cannon.GetInstance());
 
     }
 
@@ -37,23 +37,24 @@ public class FireCannon extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        relay.set(Relay.Value.kOn);
+        Cannon.setRelay(Relay.Value.kOn);
         System.out.println ("Did it ton");
 
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-       return !OI.fireCannon.get();
+       return false;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-        relay.set(Relay.Value.kOff);
+        Cannon.setRelay(Relay.Value.kOff);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+        end();
     }
 }
