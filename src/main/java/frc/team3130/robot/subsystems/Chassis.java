@@ -46,8 +46,7 @@ public class Chassis extends Subsystem{
         m_rightMotorRear.configFactoryDefault();
         m_Cannon.configFactoryDefault();
 
-        m_Cannon.configVoltageCompSaturation(12.0, 0);
-        m_Cannon.enableVoltageCompensation(true);
+        m_Cannon.set(ControlMode.PercentOutput, 100);
 
         m_leftMotorFront.setNeutralMode(NeutralMode.Brake);
         m_rightMotorFront.setNeutralMode(NeutralMode.Brake);
