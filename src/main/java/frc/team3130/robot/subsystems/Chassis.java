@@ -28,7 +28,7 @@ public class Chassis extends Subsystem{
     private static WPI_TalonSRX m_leftMotorRear;
     private static WPI_TalonSRX m_rightMotorFront;
     private static WPI_TalonSRX m_rightMotorRear;
-    private static WPI_TalonSRX m_Cannon;
+    public static WPI_TalonSRX m_Cannon;
 
 
 
@@ -46,7 +46,7 @@ public class Chassis extends Subsystem{
         m_rightMotorRear.configFactoryDefault();
         m_Cannon.configFactoryDefault();
 
-        m_Cannon.set(ControlMode.PercentOutput, 100);
+        m_Cannon.set(ControlMode.PercentOutput, 1);
 
         m_leftMotorFront.setNeutralMode(NeutralMode.Brake);
         m_rightMotorFront.setNeutralMode(NeutralMode.Brake);

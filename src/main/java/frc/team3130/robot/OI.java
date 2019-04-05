@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 import frc.team3130.robot.commands.FireCannon;
+import frc.team3130.robot.commands.StartCompressor;
+import frc.team3130.robot.commands.StopCompressor;
 
 
 public class OI {
@@ -67,6 +69,8 @@ public class OI {
 
     public static JoystickButton fireCannon;
     public static JoystickButton startAiming;
+    public static JoystickButton stopCompressor;
+    public static JoystickButton powerCompressor;
 
 
     private OI(){
@@ -74,9 +78,13 @@ public class OI {
 
         fireCannon = new JoystickButton(gamepad, 1);
         startAiming = new JoystickButton(gamepad, 6);
+        stopCompressor = new JoystickButton(gamepad, 7);
+        powerCompressor = new JoystickButton(gamepad, 8);
+
 
         fireCannon.whileHeld(new FireCannon());
-
+        stopCompressor.whenPressed(new StopCompressor());
+        powerCompressor.whenPressed(new StartCompressor());
 
 
     }
