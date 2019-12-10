@@ -28,7 +28,7 @@ public class DefaultDrive extends Command {
   @Override
   protected void execute() {
 
-    double moveSpeed = -0.5 * OI.gamepad.getRawAxis(1); //joystick's y axis is inverted
+    double moveSpeed = 0.5 * OI.gamepad.getRawAxis(1); //joystick's y axis is inverted
     double turnSpeed =  OI.gamepad.getRawAxis(4);
 
     
